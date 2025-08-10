@@ -5,6 +5,7 @@ This dotfiles repository requires some features configured in the
 
 ```json
 "features": {
+  "ghcr.io/devcontainers/features/node:1": {}
   "ghcr.io/devcontainers-extra/features/fd:1": {},
   "ghcr.io/devcontainers-extra/features/fzf:1": {},
   "ghcr.io/devcontainers-extra/features/ripgrep:1": {},
