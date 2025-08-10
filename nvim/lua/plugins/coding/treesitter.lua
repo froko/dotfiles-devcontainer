@@ -1,16 +1,13 @@
 return {
   'nvim-treesitter/nvim-treesitter',
   build = ':TSUpdate',
-  event = { "BufReadPre", "BufNewFile" },
-  config = function()
-    require('nvim-treesitter.configs').setup({
-      ensure_installed = {
-        'lua',
-        'vim',
-        'json',
-        'markdown',
-        'markdown_inline',
-      },
+  event = { 'BufReadPre', 'BufNewFile' },
+  opts = function(_, opts)
+    local parsers = { 'lua', 'vim', 'json', 'bash' }
+    opts.ensure_installed = vim.list_extend(opts.ensure_installed or {}, parsers)
+  end,
+  config = function(_, opts)
+    local common_options = {
       sync_install = false,
       auto_install = false,
       highlight = { enable = true },
@@ -24,8 +21,8 @@ return {
           node_decremental = '<BS>',
         },
       },
-      markdown = { enable = true },
-      markdown_inline = { enable = true },
-    })
+    }
+
+    require('nvim-treesitter.configs').setup(vim.tbl_deep_extend('force', common_options, opts))
   end,
 }

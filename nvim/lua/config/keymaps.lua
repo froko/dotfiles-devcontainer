@@ -4,7 +4,7 @@ local vnoremap = require('utils').vnoremap
 
 -- Core
 inoremap('jk', '<Esc>')
-nnoremap('<leader>e', ':e!<CR>', { desc = 'r[E]load file' })
+nnoremap('<leader>r', ':e!<CR>', { desc = '[R]eload file' })
 
 -- Navigation
 nnoremap('L', '$')
@@ -31,4 +31,4 @@ vnoremap('<Down>', ":m '>+1<CR>gv=gv")
 vnoremap('<Up>', ":m '<-2<CR>gv=gv")
 
 -- Replace in file
-nnoremap('<Leader>s', ':%s//gI<Left><Left><Left>', { desc = '[S]earch and [R]eplace in file' })
+nnoremap('<Leader>s', ':%s//gI<Left><Left><Left>', { desc = '[S]earch and Replace in file' })

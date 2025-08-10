@@ -3,58 +3,63 @@ vim.lsp.enable('ts-ls')
 vim.lsp.enable('astro')
 vim.lsp.enable('tailwindcss')
 
-require('mason-tool-installer').setup({
-  ensure_installed = {
-    'eslint-lsp',
-    'typescript-language-server',
-    'astro-language-server',
-    'tailwindcss-language-server',
-    'prettier',
-  },
-})
-
-require('lint').linters_by_ft = {
-  javascript = { 'eslint' },
-  javascriptreact = { 'eslint' },
-  typescript = { 'eslint' },
-  typescriptreact = { 'eslint' },
-  astro = { 'eslint' },
-  svelte = { 'eslint' },
-}
-
-require('conform').setup({
-  opts = {
-    formatters_by_ft = {
-      javascript = { 'prettier' },
-      javascriptreact = { 'prettier' },
-      typescript = { 'prettier' },
-      typescriptreact = { 'prettier' },
-      astro = { 'prettier' },
-      svelte = { 'prettier' },
-      html = { 'prettier' },
-      css = { 'prettier' },
-    },
-  },
-})
-
-require('nvim-treesitter').opts = function(_, opts)
-  vim.list_extend(opts.ensure_installed, { 'javascript', 'typescript', 'astro', 'svelte', 'html', 'css' })
-  opts.ensure_installed = vim.tbl_flatten({ opts.ensure_installed })
-  local seen = {}
-  local unique = {}
-  for _, lang in ipairs(opts.ensure_installed) do
-    if not seen[lang] then
-      unique[#unique + 1] = lang
-      seen[lang] = true
-    end
-  end
-  opts.ensure_installed = unique
-end
-
 return {
-  'windwp/nvim-ts-autotag',
-  event = 'VeryLazy',
-  config = function()
-    require('nvim-ts-autotag').setup()
-  end,
+  {
+    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    opts = function(_, opts)
+      local tools = {
+        'eslint-lsp',
+        'typescript-language-server',
+        'astro-language-server',
+        'tailwindcss-language-server',
+      }
+      opts.ensure_installed = vim.list_extend(opts.ensure_installed or {}, tools)
+    end,
+  },
+  {
+    'nvim-treesitter/nvim-treesitter',
+    opts = function(_, opts)
+      local parsers = { 'javascript', 'typescript', 'astro', 'svelte', 'html', 'css' }
+      opts.ensure_installed = vim.list_extend(opts.ensure_installed or {}, parsers)
+      opts.markdown = { enable = true }
+      opts.markdown_inline = { enable = true }
+    end,
+  },
+  {
+    'stevearc/conform.nvim',
+    opts = function(_, opts)
+      local formatters = {
+        javascript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        astro = { 'prettier' },
+        svelte = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+      }
+      opts.formatters_by_ft = vim.tbl_deep_extend('force', opts.formatters_by_ft or {}, formatters)
+    end,
+  },
+  {
+    'mfussenegger/nvim-lint',
+    opts = function(_, opts)
+      local linters = {
+        javascript = { 'eslint' },
+        javascriptreact = { 'eslint' },
+        typescript = { 'eslint' },
+        typescriptreact = { 'eslint' },
+        astro = { 'eslint' },
+        svelte = { 'eslint' },
+      }
+      opts.linters_by_ft = vim.tbl_deep_extend('force', opts.linters_by_ft or {}, linters)
+    end,
+  },
+  {
+    'windwp/nvim-ts-autotag',
+    event = 'VeryLazy',
+    config = function()
+      require('nvim-ts-autotag').setup()
+    end,
+  },
 }

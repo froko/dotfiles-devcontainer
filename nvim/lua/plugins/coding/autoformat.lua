@@ -39,31 +39,22 @@ local function fallback_format(bufnr)
 end
 
 return {
-  {
-    'stevearc/conform.nvim',
-    cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>bf',
-        function()
-          require('conform').format({ async = true, timeout_ms = 1500, lsp_format = fallback_format })
-        end,
-        desc = '[F]ormat [B]uffer',
-      },
-    },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function()
-        return {
-          timeout_ms = 1000,
-          lsp_format = fallback_format,
-        }
+  'stevearc/conform.nvim',
+  event = 'BufReadPre',
+  cmd = { 'ConformInfo' },
+  opts = function(_, opts)
+    local formatters = { lua = { 'stylua' }, json = { 'prettier' } }
+
+    opts.formatters_by_ft = vim.tbl_deep_extend('force', opts.formatters_by_ft or {}, formatters)
+    opts.format_on_save = { timeout_ms = 1000, lsp_format = fallback_format }
+  end,
+  keys = {
+    {
+      '<leader>bf',
+      function()
+        require('conform').format({ async = true, timeout_ms = 1500, lsp_format = fallback_format })
       end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        json = { 'prettier' },
-        markdown = { 'prettier' },
-      },
+      desc = '[F]ormat [B]uffer',
     },
   },
 }

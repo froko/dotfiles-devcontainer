@@ -1,6 +1,9 @@
 -- Set <space> as the leader key
 vim.g.mapleader = ' '
 
+-- Make visuals more appealing
+vim.o.winborder = 'rounded'
+
 -- Don't show mode
 vim.o.showmode = false
 
@@ -63,6 +66,7 @@ vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable = false
 
+-- Disable built-in providers to speed up startup time
 vim.g.loaded_node_provider = 0
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_perl_provider = 0
